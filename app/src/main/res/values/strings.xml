@@ -2,4 +2,6 @@
     <string name="app_name">7MinutesWorkout</string>
     <string name="image">Image</string>
     <string name="str_start">START</string>
+    <string name="upcoming_exercise">UPCOMING EXERCISE</string>
+    <string name="exercise_name">Exercise name</string>
 </resources>
