@@ -1,19 +1,27 @@
 package pl.pilichm.a7minutesworkout
 
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ExerciseActivity : AppCompatActivity() {
+class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restTimer: CountDownTimer? = null
     private var restProgress = 0
     private var exerciseTimer: CountDownTimer? = null
     private var exerciseProgress = 0
     private var exerciseList: ArrayList<ExerciseModel>? = null
-    private var currentExercisePostion = -1
+    private var currentExercisePosition = -1
+    private var textToSpeech: TextToSpeech? = null
+    private var player: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +38,8 @@ class ExerciseActivity : AppCompatActivity() {
 
         exerciseList = Constants.defaultExerciseList()
         setUpRestView()
+
+        textToSpeech = TextToSpeech(this, this)
     }
 
     private fun setRestProgressBar(){
@@ -63,7 +73,7 @@ class ExerciseActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                if (currentExercisePostion < exerciseList?.size!! - 1){
+                if (currentExercisePosition < exerciseList?.size!! - 1){
                     setUpRestView()
                 } else {
                     Toast.makeText(applicationContext, "END", Toast.LENGTH_SHORT).show()
@@ -77,6 +87,14 @@ class ExerciseActivity : AppCompatActivity() {
         val llExerciseView = findViewById<LinearLayout>(R.id.llExerciseView)
         val tvUpcomingExerciseName = findViewById<TextView>(R.id.tvUpcomingExerciseName)
 
+        try {
+            player = MediaPlayer.create(applicationContext, R.raw.press_start)
+            player!!.isLooping = false
+            player!!.start()
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
+
         llRestView.visibility = View.VISIBLE
         llExerciseView.visibility = View.GONE
 
@@ -86,7 +104,7 @@ class ExerciseActivity : AppCompatActivity() {
         }
 
         setRestProgressBar()
-        tvUpcomingExerciseName.text = exerciseList!![currentExercisePostion+1].getName()
+        tvUpcomingExerciseName.text = exerciseList!![currentExercisePosition+1].getName()
     }
 
     private fun setUpExerciseView(){
@@ -104,9 +122,11 @@ class ExerciseActivity : AppCompatActivity() {
         }
         setUpExerciseProgressBar()
 
-        currentExercisePostion += 1
-        tvExerciseName.text = exerciseList!![currentExercisePostion].getName()
-        ivImage.setImageResource(exerciseList!![currentExercisePostion].getImage())
+        currentExercisePosition += 1
+
+        speakOut(exerciseList!![currentExercisePosition].getName())
+        tvExerciseName.text = exerciseList!![currentExercisePosition].getName()
+        ivImage.setImageResource(exerciseList!![currentExercisePosition].getImage())
     }
 
     override fun onDestroy() {
@@ -114,11 +134,41 @@ class ExerciseActivity : AppCompatActivity() {
             restTimer!!.cancel()
             restProgress = 0
         }
+
+        if (exerciseTimer!=null){
+            exerciseTimer!!.cancel()
+            exerciseProgress = 0
+        }
+
+        if (textToSpeech!=null){
+            textToSpeech!!.stop()
+            textToSpeech!!.shutdown()
+        }
+
+        if (player!=null){
+            player!!.stop()
+        }
+
         super.onDestroy()
     }
 
     companion object {
         private const val REST_TIMER_DURATION = 10
         private const val EXERCISE_TIMER_DURATION = 30
+    }
+
+    override fun onInit(status: Int) {
+        if (status==TextToSpeech.SUCCESS){
+            val result = textToSpeech!!.setLanguage(Locale.US)
+            if (result==TextToSpeech.LANG_MISSING_DATA||result==TextToSpeech.LANG_NOT_SUPPORTED){
+                Log.e("TextToSpeech", "Specified language not supported!")
+            }
+        } else {
+            Log.e("TextToSpeech", "Initialization failed!")
+        }
+    }
+
+    private fun speakOut(text: String){
+        textToSpeech!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 }
