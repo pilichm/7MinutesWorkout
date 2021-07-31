@@ -9,6 +9,8 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
@@ -22,6 +24,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var currentExercisePosition = -1
     private var textToSpeech: TextToSpeech? = null
     private var player: MediaPlayer? = null
+    private var exerciseAdaper: ExerciseStatusAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setUpRestView()
 
         textToSpeech = TextToSpeech(this, this)
+
+        setUpExerciseStatusRecyclerView()
     }
 
     private fun setRestProgressBar(){
@@ -56,11 +61,14 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
                 setUpExerciseView()
+                exerciseList!![currentExercisePosition].setIsSelected(true)
+                exerciseAdaper!!.notifyDataSetChanged()
             }
         }.start()
     }
 
     private fun setUpExerciseProgressBar(){
+        exerciseProgress = 0
         val exerciseProgressBar = findViewById<ProgressBar>(R.id.progressBarExercise)
         val tvExerciseTimer = findViewById<TextView>(R.id.tvExerciseTimer)
         exerciseProgressBar.progress = exerciseProgress
@@ -74,6 +82,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
                 if (currentExercisePosition < exerciseList?.size!! - 1){
+                    exerciseList!![currentExercisePosition].setIsSelected(false)
+                    exerciseList!![currentExercisePosition].setIsCompleted(true)
+                    exerciseAdaper!!.notifyDataSetChanged()
                     setUpRestView()
                 } else {
                     Toast.makeText(applicationContext, "END", Toast.LENGTH_SHORT).show()
@@ -170,5 +181,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun speakOut(text: String){
         textToSpeech!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    private fun setUpExerciseStatusRecyclerView(){
+        val rvExerciseStatus: RecyclerView = findViewById(R.id.rvExerciseStatus)
+        rvExerciseStatus.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        exerciseAdaper = ExerciseStatusAdapter(exerciseList!!, this)
+        rvExerciseStatus.adapter = exerciseAdaper
     }
 }
