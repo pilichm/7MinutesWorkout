@@ -4,4 +4,12 @@
     <string name="str_start">START</string>
     <string name="upcoming_exercise">UPCOMING EXERCISE</string>
     <string name="exercise_name">Exercise name</string>
+    <string name="end">END</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="you_have_finished_the_workout">You have finished the workout!</string>
+    <string name="finish">FINISH</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="this_will_stop_your_workout">This will stop your workout. You\'ve come this far, are you sure?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 </resources>

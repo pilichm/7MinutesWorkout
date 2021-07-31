@@ -1,5 +1,7 @@
 package pl.pilichm.a7minutesworkout
 
+import android.app.Dialog
+import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -36,7 +38,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         toolbarExerciseActivity.setNavigationOnClickListener {
-            onBackPressed()
+            setUpCustomDialogForBackButton()
         }
 
         exerciseList = Constants.defaultExerciseList()
@@ -45,6 +47,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech = TextToSpeech(this, this)
 
         setUpExerciseStatusRecyclerView()
+
     }
 
     private fun setRestProgressBar(){
@@ -87,7 +90,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     exerciseAdaper!!.notifyDataSetChanged()
                     setUpRestView()
                 } else {
-                    Toast.makeText(applicationContext, "END", Toast.LENGTH_SHORT).show()
+                    finish()
+                    val intent = Intent(applicationContext, FinishActivity::class.java)
+                    startActivity(intent)
                 }
             }
         }.start()
@@ -189,5 +194,27 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         exerciseAdaper = ExerciseStatusAdapter(exerciseList!!, this)
         rvExerciseStatus.adapter = exerciseAdaper
+    }
+
+    private fun setUpCustomDialogForBackButton(){
+        val customDialog = Dialog(applicationContext)
+        customDialog.setContentView(R.layout.dialog_back_confirmation)
+
+        val llBackDialog: LinearLayout = customDialog.findViewById(R.id.llBackDialog)
+        val buttonYes: Button = llBackDialog.findViewById(R.id.buttonYes)
+        val buttonNo: Button = llBackDialog.findViewById(R.id.buttonNo)
+
+        buttonYes.setOnClickListener {
+            customDialog.dismiss()
+            finish()
+        }
+
+        buttonNo.setOnClickListener {
+            customDialog.dismiss()
+        }
+
+        if (!isFinishing){
+            customDialog.show()
+        }
     }
 }
