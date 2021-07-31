@@ -32,7 +32,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exercise)
 
-        val toolbarExerciseActivity = findViewById<Toolbar>(R.id.toolbar_exercise_activity)
+        val toolbarExerciseActivity: Toolbar = findViewById(R.id.toolbar_exercise_activity)
         setSupportActionBar(toolbarExerciseActivity)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -51,8 +51,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setRestProgressBar(){
-        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        val tvTimer = findViewById<TextView>(R.id.tvTimer)
+        val progressBar: ProgressBar = findViewById(R.id.progressBar)
+        val tvTimer: TextView = findViewById(R.id.tvTimer)
         progressBar.progress = restProgress
 
         restTimer = object : CountDownTimer(REST_TIMER_DURATION*1000L, 1000){
@@ -72,8 +72,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun setUpExerciseProgressBar(){
         exerciseProgress = 0
-        val exerciseProgressBar = findViewById<ProgressBar>(R.id.progressBarExercise)
-        val tvExerciseTimer = findViewById<TextView>(R.id.tvExerciseTimer)
+        val exerciseProgressBar: ProgressBar = findViewById(R.id.progressBarExercise)
+        val tvExerciseTimer: TextView = findViewById(R.id.tvExerciseTimer)
         exerciseProgressBar.progress = exerciseProgress
 
         exerciseTimer = object : CountDownTimer(EXERCISE_TIMER_DURATION*1000L, 1000) {
@@ -99,9 +99,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setUpRestView(){
-        val llRestView = findViewById<LinearLayout>(R.id.llRestView)
-        val llExerciseView = findViewById<LinearLayout>(R.id.llExerciseView)
-        val tvUpcomingExerciseName = findViewById<TextView>(R.id.tvUpcomingExerciseName)
+        val llRestView: LinearLayout = findViewById(R.id.llRestView)
+        val llExerciseView: LinearLayout = findViewById(R.id.llExerciseView)
+        val tvUpcomingExerciseName: TextView = findViewById(R.id.tvUpcomingExerciseName)
 
         try {
             player = MediaPlayer.create(applicationContext, R.raw.press_start)
@@ -124,10 +124,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setUpExerciseView(){
-        val llRestView = findViewById<LinearLayout>(R.id.llRestView)
-        val llExerciseView = findViewById<LinearLayout>(R.id.llExerciseView)
-        val ivImage = findViewById<ImageView>(R.id.ivImage)
-        val tvExerciseName = findViewById<TextView>(R.id.tvExerciseName)
+        val llRestView: LinearLayout = findViewById(R.id.llRestView)
+        val llExerciseView: LinearLayout = findViewById(R.id.llExerciseView)
+        val ivImage: ImageView = findViewById(R.id.ivImage)
+        val tvExerciseName: TextView = findViewById(R.id.tvExerciseName)
 
         llRestView.visibility = View.GONE
         llExerciseView.visibility = View.VISIBLE
