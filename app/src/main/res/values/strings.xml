@@ -15,7 +15,14 @@
     <string name="bpm">BMI</string>
     <string name="calculator">Calculator</string>
     <string name="calculate">CALCULATE</string>
-    <string name="your_bmi">YOUR BMI</string>
-    <string name="height_in_cm">HEIGHT (in cm)</string>
+    <string name="height_in_inches">HEIGHT (in inches)</string>
+    <string name="height_in_feet">HEIGHT (in feet)</string>
+    <string name="metric_units">METRIC UNITS</string>
+    <string name="us_units">US UNITS</string>
     <string name="weight_in_kg">WEIGHT (in kg)</string>
+    <string name="height_in_cm">HEIGHT (in cm)</string>
+    <string name="weight_in_lbs">WEIGHT (in lbs)</string>
+    <string name="feet">Feet</string>
+    <string name="inch">Inch</string>
+    <string name="your_bmi">YOUR BMI</string>
 </resources>
