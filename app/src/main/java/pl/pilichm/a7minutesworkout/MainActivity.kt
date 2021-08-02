@@ -12,15 +12,18 @@ class MainActivity : AppCompatActivity() {
 
         val llStart: LinearLayout = findViewById(R.id.ll_start)
         val llBMI: LinearLayout = findViewById(R.id.llBMI)
+        val llHistory: LinearLayout = findViewById(R.id.llHistory)
 
         llStart.setOnClickListener {
-            val intent = Intent( this, ExerciseActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(applicationContext, ExerciseActivity::class.java))
         }
 
         llBMI.setOnClickListener {
-            val intent = Intent( this, BMIActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent( applicationContext, BMIActivity::class.java))
+        }
+
+        llHistory.setOnClickListener {
+            startActivity(Intent(applicationContext, HistoryActivity::class.java))
         }
     }
 }
