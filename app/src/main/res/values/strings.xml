@@ -27,4 +27,6 @@
     <string name="your_bmi">YOUR BMI</string>
     <string name="exercise_completed">EXERCISE COMPLETED</string>
     <string name="no_data_available">NO DATA AVAILABLE</string>
+    <string name="history_list">HISTORY LIST</string>
+    <string name="chart">CHART</string>
 </resources>

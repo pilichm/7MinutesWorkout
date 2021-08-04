@@ -8,14 +8,15 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_history_row.view.*
 
 class HistoryAdapter(val context: Context, private val items: ArrayList<String>):
     RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val llHistoryItemMain: LinearLayout = view.findViewById(R.id.llHistoryItemMain)
-        val tvPosition: TextView = view.findViewById(R.id.tvPosition)
-        val tvItem: TextView = view.findViewById(R.id.tvItem)
+        val llHistoryItemMain: LinearLayout = view.llHistoryItemMain
+        val tvPosition: TextView = view.tvPosition
+        val tvItem: TextView = view.tvItem
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

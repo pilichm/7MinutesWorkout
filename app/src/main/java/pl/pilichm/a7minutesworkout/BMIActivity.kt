@@ -2,11 +2,9 @@ package pl.pilichm.a7minutesworkout
 
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.Toolbar
-import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.activity_bmiactivity.*
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -19,14 +17,7 @@ class BMIActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bmiactivity)
 
-        val toolbarBMIActivity: Toolbar = findViewById(R.id.toolbarBMIActivity)
-        val btnCalculateUnits: Button = findViewById(R.id.btnCalculateUnits)
-        val etMetricUnitWeight: AppCompatEditText = findViewById(R.id.etMetricUnitWeight)
-        val etMetricUnitHeight: AppCompatEditText = findViewById(R.id.etMetricUnitHeight)
-        val rgUnits: RadioGroup = findViewById(R.id.rgUnits)
-
         setSupportActionBar(toolbarBMIActivity)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "CALCULATE BMI"
 
@@ -47,10 +38,6 @@ class BMIActivity : AppCompatActivity() {
                 }
             } else {
                 if (validateUSUnits()){
-                    val etUSUnitWeight: AppCompatEditText = findViewById(R.id.etUSUnitWeight)
-                    val etUSUnitHeightFeet: AppCompatEditText = findViewById(R.id.etUSUnitHeightFeet)
-                    val etUSUnitHeightInch: AppCompatEditText = findViewById(R.id.etUSUnitHeightInch)
-
                     val weight  = etUSUnitWeight.text.toString().toFloat()
                     val heightFeet = etUSUnitHeightFeet.text.toString()
                     val heightInches = etUSUnitHeightInch.text.toString()
@@ -64,21 +51,15 @@ class BMIActivity : AppCompatActivity() {
             }
         }
 
-        makeVisibleMetricUnitsView()
+        makeVisibleBMIView(true)
 
-        rgUnits.setOnCheckedChangeListener { group, checkedId ->
-            if (checkedId==R.id.rbMetricUnits){
-                makeVisibleMetricUnitsView()
-            } else {
-                makeVisibleUSUnitsView()
-            }
+        rgUnits.setOnCheckedChangeListener { _, checkedId ->
+            makeVisibleBMIView(checkedId==R.id.rbMetricUnits)
         }
     }
 
     private fun validateMetricUnits(): Boolean {
         var isValid = true
-        val etMetricUnitWeight: AppCompatEditText = findViewById(R.id.etMetricUnitWeight)
-        val etMetricUnitHeight: AppCompatEditText = findViewById(R.id.etMetricUnitHeight)
 
         if (etMetricUnitWeight.text.toString().isEmpty()
             ||etMetricUnitHeight.text.toString().isEmpty()){
@@ -90,9 +71,6 @@ class BMIActivity : AppCompatActivity() {
 
     private fun validateUSUnits(): Boolean {
         var isValid = true
-        val etUSUnitWeight: AppCompatEditText = findViewById(R.id.etUSUnitWeight)
-        val etUSUnitHeightFeet: AppCompatEditText = findViewById(R.id.etUSUnitHeightFeet)
-        val etUSUnitHeightInch: AppCompatEditText = findViewById(R.id.etUSUnitHeightInch)
 
         if (etUSUnitWeight.text.toString().isEmpty()
             ||etUSUnitHeightFeet.text.toString().isEmpty()
@@ -106,11 +84,6 @@ class BMIActivity : AppCompatActivity() {
     private fun displayBMIResult(bmi: Float){
         val bmiLabel: String
         val bmiDescription: String
-
-        val tvBMIValue: TextView = findViewById(R.id.tvBMIValue)
-        val tvBMIType: TextView = findViewById(R.id.tvBMIType)
-        val tvBMIDescription: TextView = findViewById(R.id.tvBMIDescription)
-        val llDisplayBMIResult: LinearLayout = findViewById(R.id.llDisplayBMIResult)
 
         if (bmi.compareTo(15f) <= 0) {
             bmiLabel = "Very severely underweight"
@@ -146,63 +119,34 @@ class BMIActivity : AppCompatActivity() {
         tvBMIDescription.text = bmiDescription
     }
 
-    private fun makeVisibleMetricUnitsView(){
-        val tilMetricUnitWeight: TextInputLayout = findViewById(R.id.tilMetricUnitWeight)
-        val tilMetricUnitHeight: TextInputLayout = findViewById(R.id.tilMetricUnitHeight)
+    private fun makeVisibleBMIView(showMetricUnits: Boolean){
+        val metricVisibility: Int
+        val usVisibility: Int
 
-        val tilUSUnitWeight: TextInputLayout = findViewById(R.id.tilUSUnitWeight)
-        val llUSUnitsHeight: LinearLayout = findViewById(R.id.llUSUnitsHeight)
-        val llDisplayBMIResult: LinearLayout = findViewById(R.id.llDisplayBMIResult)
-
-        val etUSUnitWeight: AppCompatEditText = findViewById(R.id.etUSUnitWeight)
-        val etUSUnitHeightFeet: AppCompatEditText = findViewById(R.id.etUSUnitHeightFeet)
-        val etUSUnitHeightInch: AppCompatEditText = findViewById(R.id.etUSUnitHeightInch)
-
-        currentVisibleView = METRIC_UNIT_VIEW
+        if (showMetricUnits){
+            currentVisibleView = METRIC_UNIT_VIEW
+            metricVisibility = View.VISIBLE
+            usVisibility = View.GONE
+        } else {
+            currentVisibleView = US_UNITS_VIEW
+            metricVisibility = View.GONE
+            usVisibility = View.VISIBLE
+        }
 
         etUSUnitWeight.text!!.clear()
         etUSUnitHeightFeet.text!!.clear()
         etUSUnitHeightInch.text!!.clear()
-
-        tilMetricUnitWeight.visibility = View.VISIBLE
-        tilMetricUnitHeight.visibility = View.VISIBLE
-
-        tilUSUnitWeight.visibility = View.GONE
-        llUSUnitsHeight.visibility = View.GONE
-
-        llDisplayBMIResult.visibility = View.GONE
-    }
-
-    private fun makeVisibleUSUnitsView(){
-        val tilMetricUnitWeight: TextInputLayout = findViewById(R.id.tilMetricUnitWeight)
-        val tilMetricUnitHeight: TextInputLayout = findViewById(R.id.tilMetricUnitHeight)
-
-        val tilUSUnitWeight: TextInputLayout = findViewById(R.id.tilUSUnitWeight)
-        val llUSUnitsHeight: LinearLayout = findViewById(R.id.llUSUnitsHeight)
-        val llDisplayBMIResult: LinearLayout = findViewById(R.id.llDisplayBMIResult)
-
-        val etMetricUnitWeight: AppCompatEditText = findViewById(R.id.etMetricUnitWeight)
-        val etMetricUnitHeight: AppCompatEditText = findViewById(R.id.etMetricUnitHeight)
-
-        val tilUsUnitHeightFeet: TextInputLayout = findViewById(R.id.tilUsUnitHeightFeet)
-        val tilUsUnitHeightInch: TextInputLayout = findViewById(R.id.tilUsUnitHeightInch)
-
-        val llUsUnitsView: LinearLayout = findViewById(R.id.llUsUnitsView)
-        llUsUnitsView.visibility = View.VISIBLE
-
-        tilUsUnitHeightFeet.visibility = View.VISIBLE
-        tilUsUnitHeightInch.visibility = View.VISIBLE
-
-        currentVisibleView = US_UNITS_VIEW
-
         etMetricUnitWeight.text!!.clear()
         etMetricUnitHeight.text!!.clear()
 
-        tilMetricUnitWeight.visibility = View.GONE
-        tilMetricUnitHeight.visibility = View.GONE
+        tilMetricUnitWeight.visibility = metricVisibility
+        tilMetricUnitHeight.visibility = metricVisibility
 
-        tilUSUnitWeight.visibility = View.VISIBLE
-        llUSUnitsHeight.visibility = View.VISIBLE
+        tilUsUnitHeightFeet.visibility = usVisibility
+        tilUsUnitHeightInch.visibility = usVisibility
+        tilUSUnitWeight.visibility = usVisibility
+        llUSUnitsHeight.visibility = usVisibility
+        llUsUnitsView.visibility = usVisibility
 
         llDisplayBMIResult.visibility = View.GONE
     }

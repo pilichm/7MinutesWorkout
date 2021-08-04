@@ -3,19 +3,18 @@ package pl.pilichm.a7minutesworkout
 import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import java.lang.Exception
+import kotlinx.android.synthetic.main.activity_exercise.*
+import kotlinx.android.synthetic.main.dialog_back_confirmation.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restTimer: CountDownTimer? = null
@@ -51,8 +50,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setRestProgressBar(){
-        val progressBar: ProgressBar = findViewById(R.id.progressBar)
-        val tvTimer: TextView = findViewById(R.id.tvTimer)
         progressBar.progress = restProgress
 
         restTimer = object : CountDownTimer(REST_TIMER_DURATION*1000L, 1000){
@@ -73,7 +70,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun setUpExerciseProgressBar(){
         exerciseProgress = 0
         val exerciseProgressBar: ProgressBar = findViewById(R.id.progressBarExercise)
-        val tvExerciseTimer: TextView = findViewById(R.id.tvExerciseTimer)
         exerciseProgressBar.progress = exerciseProgress
 
         exerciseTimer = object : CountDownTimer(EXERCISE_TIMER_DURATION*1000L, 1000) {
@@ -99,10 +95,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setUpRestView(){
-        val llRestView: LinearLayout = findViewById(R.id.llRestView)
-        val llExerciseView: LinearLayout = findViewById(R.id.llExerciseView)
-        val tvUpcomingExerciseName: TextView = findViewById(R.id.tvUpcomingExerciseName)
-
         try {
             player = MediaPlayer.create(applicationContext, R.raw.press_start)
             player!!.isLooping = false
@@ -124,11 +116,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setUpExerciseView(){
-        val llRestView: LinearLayout = findViewById(R.id.llRestView)
-        val llExerciseView: LinearLayout = findViewById(R.id.llExerciseView)
-        val ivImage: ImageView = findViewById(R.id.ivImage)
-        val tvExerciseName: TextView = findViewById(R.id.tvExerciseName)
-
         llRestView.visibility = View.GONE
         llExerciseView.visibility = View.VISIBLE
 
@@ -169,8 +156,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     companion object {
-        private const val REST_TIMER_DURATION = 10
-        private const val EXERCISE_TIMER_DURATION = 30
+        private const val REST_TIMER_DURATION = 1
+        private const val EXERCISE_TIMER_DURATION = 1
     }
 
     override fun onInit(status: Int) {
@@ -189,7 +176,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setUpExerciseStatusRecyclerView(){
-        val rvExerciseStatus: RecyclerView = findViewById(R.id.rvExerciseStatus)
         rvExerciseStatus.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         exerciseAdaper = ExerciseStatusAdapter(exerciseList!!, this)
@@ -199,10 +185,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun setUpCustomDialogForBackButton(){
         val customDialog = Dialog(applicationContext)
         customDialog.setContentView(R.layout.dialog_back_confirmation)
-
-        val llBackDialog: LinearLayout = customDialog.findViewById(R.id.llBackDialog)
-        val buttonYes: Button = llBackDialog.findViewById(R.id.buttonYes)
-        val buttonNo: Button = llBackDialog.findViewById(R.id.buttonNo)
 
         buttonYes.setOnClickListener {
             customDialog.dismiss()
