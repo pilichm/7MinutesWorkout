@@ -8,15 +8,18 @@ import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_exercise.*
-import kotlinx.android.synthetic.main.dialog_back_confirmation.*
+import pl.pilichm.a7minutesworkout.Constants.Companion.EXERCISE_TIMER_DURATION
+import pl.pilichm.a7minutesworkout.Constants.Companion.REST_TIMER_DURATION
+import pl.pilichm.a7minutesworkout.databinding.ActivityExerciseBinding
 import java.util.*
 
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+    private lateinit var binding: ActivityExerciseBinding
     private var restTimer: CountDownTimer? = null
     private var restProgress = 0
     private var exerciseTimer: CountDownTimer? = null
@@ -29,7 +32,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_exercise)
+        binding = ActivityExerciseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val toolbarExerciseActivity: Toolbar = findViewById(R.id.toolbar_exercise_activity)
         setSupportActionBar(toolbarExerciseActivity)
@@ -50,13 +54,13 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setRestProgressBar(){
-        progressBar.progress = restProgress
+        binding.progressBar.progress = restProgress
 
         restTimer = object : CountDownTimer(REST_TIMER_DURATION*1000L, 1000){
             override fun onTick(millisUntilFinished: Long) {
                 restProgress += 1
-                progressBar.progress = REST_TIMER_DURATION - restProgress
-                tvTimer.text = (REST_TIMER_DURATION - restProgress).toString()
+                binding.progressBar.progress = REST_TIMER_DURATION - restProgress
+                binding.tvTimer.text = (REST_TIMER_DURATION - restProgress).toString()
             }
 
             override fun onFinish() {
@@ -76,7 +80,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress += 1
                 exerciseProgressBar.progress = EXERCISE_TIMER_DURATION - exerciseProgress
-                tvExerciseTimer.text = (EXERCISE_TIMER_DURATION - exerciseProgress).toString()
+                binding.tvExerciseTimer.text = (EXERCISE_TIMER_DURATION - exerciseProgress).toString()
             }
 
             override fun onFinish() {
@@ -103,8 +107,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             e.printStackTrace()
         }
 
-        llRestView.visibility = View.VISIBLE
-        llExerciseView.visibility = View.GONE
+        binding.llRestView.visibility = View.VISIBLE
+        binding.llExerciseView.visibility = View.GONE
 
         if (restTimer!=null){
             restTimer!!.cancel()
@@ -112,12 +116,12 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         setRestProgressBar()
-        tvUpcomingExerciseName.text = exerciseList!![currentExercisePosition+1].getName()
+        binding.tvUpcomingExerciseName.text = exerciseList!![currentExercisePosition+1].getName()
     }
 
     private fun setUpExerciseView(){
-        llRestView.visibility = View.GONE
-        llExerciseView.visibility = View.VISIBLE
+        binding.llRestView.visibility = View.GONE
+        binding.llExerciseView.visibility = View.VISIBLE
 
         if (exerciseTimer!=null){
             exerciseTimer!!.cancel()
@@ -128,8 +132,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         currentExercisePosition += 1
 
         speakOut(exerciseList!![currentExercisePosition].getName())
-        tvExerciseName.text = exerciseList!![currentExercisePosition].getName()
-        ivImage.setImageResource(exerciseList!![currentExercisePosition].getImage())
+        binding.tvExerciseName.text = exerciseList!![currentExercisePosition].getName()
+        binding.ivImage.setImageResource(exerciseList!![currentExercisePosition].getImage())
     }
 
     override fun onDestroy() {
@@ -155,11 +159,6 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onDestroy()
     }
 
-    companion object {
-        private const val REST_TIMER_DURATION = 1
-        private const val EXERCISE_TIMER_DURATION = 1
-    }
-
     override fun onInit(status: Int) {
         if (status==TextToSpeech.SUCCESS){
             val result = textToSpeech!!.setLanguage(Locale.US)
@@ -176,15 +175,18 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun setUpExerciseStatusRecyclerView(){
-        rvExerciseStatus.layoutManager =
+        binding.rvExerciseStatus.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         exerciseAdaper = ExerciseStatusAdapter(exerciseList!!, this)
-        rvExerciseStatus.adapter = exerciseAdaper
+        binding.rvExerciseStatus.adapter = exerciseAdaper
     }
 
     private fun setUpCustomDialogForBackButton(){
         val customDialog = Dialog(applicationContext)
         customDialog.setContentView(R.layout.dialog_back_confirmation)
+
+        val buttonYes = customDialog.findViewById(R.id.buttonYes) as Button
+        val buttonNo = customDialog.findViewById(R.id.buttonNo) as Button
 
         buttonYes.setOnClickListener {
             customDialog.dismiss()

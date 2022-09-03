@@ -3,22 +3,25 @@ package pl.pilichm.a7minutesworkout
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_finish.*
+import pl.pilichm.a7minutesworkout.databinding.ActivityFinishBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FinishActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityFinishBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_finish)
+        binding = ActivityFinishBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setSupportActionBar(toolbarFinishActivity)
+        setSupportActionBar(binding.toolbarFinishActivity)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        btnFinish.setOnClickListener {
+        binding.btnFinish.setOnClickListener {
             onBackPressed()
         }
 
-        btnFinish.setOnClickListener {
+        binding.btnFinish.setOnClickListener {
             finish()
         }
 

@@ -2,6 +2,10 @@ package pl.pilichm.a7minutesworkout
 
 class Constants {
     companion object {
+        const val DB_DATE_FORMAT = "dd MMM yyyy HH:mm:ss"
+        const val REST_TIMER_DURATION = 5
+        const val EXERCISE_TIMER_DURATION = 10
+
         fun defaultExerciseList(): ArrayList<ExerciseModel> {
             val exerciseList = ArrayList<ExerciseModel>()
 

@@ -8,13 +8,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_exercise_status.view.*
 
 class ExerciseStatusAdapter(private val items: ArrayList<ExerciseModel>, private val context: Context):
     RecyclerView.Adapter<ExerciseStatusAdapter.ViewHolder>() {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val tvItem: TextView = view.tvItem
+        val tvItem: TextView = view.findViewById(R.id.tvItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
